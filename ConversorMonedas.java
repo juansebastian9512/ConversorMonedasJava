@@ -1,0 +1,181 @@
+import java.util.Scanner;
+import java.text.DecimalFormat;
+
+public class ConversorMonedas {
+    
+    // Tasas de cambio actualizadas (aproximadas)
+    private static final double USD_TO_COP = 4200.0;  // Peso Colombiano
+    private static final double USD_TO_MXN = 17.5;    // Peso Mexicano
+    private static final double USD_TO_BRL = 5.2;     // Real Brasileño
+    
+    private static Scanner scanner = new Scanner(System.in);
+    private static DecimalFormat df = new DecimalFormat("#,##0.00");
+    
+    public static void main(String[] args) {
+        System.out.println("=== CONVERSOR DE MONEDAS ===");
+        System.out.println("Bienvenido al conversor de monedas");
+        System.out.println();
+        
+        boolean continuar = true;
+        
+        while (continuar) {
+            mostrarMenu();
+            int opcion = obtenerOpcionConversion();
+            
+            if (opcion == 0) {
+                System.out.println("¡Gracias por usar el conversor de monedas!");
+                continuar = false;
+                continue;
+            }
+            
+            double cantidad = obtenerCantidad();
+            double resultado = realizarConversion(opcion, cantidad);
+            mostrarResultado(opcion, cantidad, resultado);
+            
+            System.out.println();
+            System.out.print("¿Desea realizar otra conversión? (s/n): ");
+            String respuesta = scanner.nextLine().toLowerCase();
+            continuar = respuesta.equals("s") || respuesta.equals("si") || respuesta.equals("sí");
+            System.out.println();
+        }
+        
+        scanner.close();
+    }
+    
+    private static void mostrarMenu() {
+        System.out.println("Seleccione el tipo de conversión:");
+        System.out.println("1. USD → Peso Colombiano (COP)");
+        System.out.println("2. Peso Colombiano (COP) → USD");
+        System.out.println("3. USD → Peso Mexicano (MXN)");
+        System.out.println("4. Peso Mexicano (MXN) → USD");
+        System.out.println("5. USD → Real Brasileño (BRL)");
+        System.out.println("6. Real Brasileño (BRL) → USD");
+        System.out.println("0. Salir");
+        System.out.print("Ingrese su opción (0-6): ");
+    }
+    
+    private static int obtenerOpcionConversion() {
+        int opcion = -1;
+        boolean entradaValida = false;
+        
+        while (!entradaValida) {
+            try {
+                String input = scanner.nextLine();
+                opcion = Integer.parseInt(input);
+                
+                if (opcion >= 0 && opcion <= 6) {
+                    entradaValida = true;
+                } else {
+                    System.out.print("Opción inválida. Ingrese un número entre 0 y 6: ");
+                }
+            } catch (NumberFormatException e) {
+                System.out.print("Por favor, ingrese un número válido: ");
+            }
+        }
+        
+        return opcion;
+    }
+    
+    private static double obtenerCantidad() {
+        double cantidad = 0;
+        boolean entradaValida = false;
+        
+        System.out.print("Ingrese la cantidad a convertir: ");
+        
+        while (!entradaValida) {
+            try {
+                String input = scanner.nextLine();
+                cantidad = Double.parseDouble(input);
+                
+                if (cantidad > 0) {
+                    entradaValida = true;
+                } else {
+                    System.out.print("La cantidad debe ser mayor a 0. Ingrese nuevamente: ");
+                }
+            } catch (NumberFormatException e) {
+                System.out.print("Por favor, ingrese un número válido: ");
+            }
+        }
+        
+        return cantidad;
+    }
+    
+    private static double realizarConversion(int opcion, double cantidad) {
+        double resultado = 0;
+        
+        switch (opcion) {
+            case 1: // USD → COP
+                resultado = cantidad * USD_TO_COP;
+                break;
+            case 2: // COP → USD
+                resultado = cantidad / USD_TO_COP;
+                break;
+            case 3: // USD → MXN
+                resultado = cantidad * USD_TO_MXN;
+                break;
+            case 4: // MXN → USD
+                resultado = cantidad / USD_TO_MXN;
+                break;
+            case 5: // USD → BRL
+                resultado = cantidad * USD_TO_BRL;
+                break;
+            case 6: // BRL → USD
+                resultado = cantidad / USD_TO_BRL;
+                break;
+        }
+        
+        return resultado;
+    }
+    
+    private static void mostrarResultado(int opcion, double cantidad, double resultado) {
+        String monedaOrigen = "";
+        String monedaDestino = "";
+        String simboloOrigen = "";
+        String simboloDestino = "";
+        
+        switch (opcion) {
+            case 1:
+                monedaOrigen = "Dólares Estadounidenses";
+                monedaDestino = "Pesos Colombianos";
+                simboloOrigen = "USD";
+                simboloDestino = "COP";
+                break;
+            case 2:
+                monedaOrigen = "Pesos Colombianos";
+                monedaDestino = "Dólares Estadounidenses";
+                simboloOrigen = "COP";
+                simboloDestino = "USD";
+                break;
+            case 3:
+                monedaOrigen = "Dólares Estadounidenses";
+                monedaDestino = "Pesos Mexicanos";
+                simboloOrigen = "USD";
+                simboloDestino = "MXN";
+                break;
+            case 4:
+                monedaOrigen = "Pesos Mexicanos";
+                monedaDestino = "Dólares Estadounidenses";
+                simboloOrigen = "MXN";
+                simboloDestino = "USD";
+                break;
+            case 5:
+                monedaOrigen = "Dólares Estadounidenses";
+                monedaDestino = "Reales Brasileños";
+                simboloOrigen = "USD";
+                simboloDestino = "BRL";
+                break;
+            case 6:
+                monedaOrigen = "Reales Brasileños";
+                monedaDestino = "Dólares Estadounidenses";
+                simboloOrigen = "BRL";
+                simboloDestino = "USD";
+                break;
+        }
+        
+        System.out.println();
+        System.out.println("=== RESULTADO DE LA CONVERSIÓN ===");
+        System.out.println("Cantidad original: " + df.format(cantidad) + " " + simboloOrigen + " (" + monedaOrigen + ")");
+        System.out.println("Cantidad convertida: " + df.format(resultado) + " " + simboloDestino + " (" + monedaDestino + ")");
+        System.out.println("===================================");
+    }
+}
