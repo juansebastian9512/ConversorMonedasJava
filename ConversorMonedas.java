@@ -7,6 +7,13 @@ public class ConversorMonedas {
     private static final double USD_TO_COP = 4200.0;  // Peso Colombiano
     private static final double USD_TO_MXN = 17.5;    // Peso Mexicano
     private static final double USD_TO_BRL = 5.2;     // Real Brasileño
+
+    // Códigos ANSI para colores (Modo Oscuro)
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK_BG = "\u001B[40m";
+    public static final String ANSI_WHITE_TEXT = "\u001B[37m";
+
+    private static boolean modoOscuro = false;
     
     private static Scanner scanner = new Scanner(System.in);
     private static DecimalFormat df = new DecimalFormat("#,##0.00");
@@ -24,7 +31,20 @@ public class ConversorMonedas {
             
             if (opcion == 0) {
                 System.out.println("¡Gracias por usar el conversor de monedas!");
+                if (modoOscuro) {
+                    System.out.print(ANSI_RESET);
+                }
                 continuar = false;
+                continue;
+            } else if (opcion == 7) {
+                modoOscuro = !modoOscuro;
+                if (modoOscuro) {
+                    System.out.print(ANSI_BLACK_BG + ANSI_WHITE_TEXT);
+                    System.out.println("Modo oscuro activado.");
+                } else {
+                    System.out.print(ANSI_RESET);
+                    System.out.println("Modo oscuro desactivado.");
+                }
                 continue;
             }
             
@@ -50,8 +70,9 @@ public class ConversorMonedas {
         System.out.println("4. Peso Mexicano (MXN) → USD");
         System.out.println("5. USD → Real Brasileño (BRL)");
         System.out.println("6. Real Brasileño (BRL) → USD");
+        System.out.println("7. " + (modoOscuro ? "Desactivar" : "Activar") + " Modo Oscuro");
         System.out.println("0. Salir");
-        System.out.print("Ingrese su opción (0-6): ");
+        System.out.print("Ingrese su opción (0-7): ");
     }
     
     private static int obtenerOpcionConversion() {
@@ -63,10 +84,10 @@ public class ConversorMonedas {
                 String input = scanner.nextLine();
                 opcion = Integer.parseInt(input);
                 
-                if (opcion >= 0 && opcion <= 6) {
+                if (opcion >= 0 && opcion <= 7) {
                     entradaValida = true;
                 } else {
-                    System.out.print("Opción inválida. Ingrese un número entre 0 y 6: ");
+                    System.out.print("Opción inválida. Ingrese un número entre 0 y 7: ");
                 }
             } catch (NumberFormatException e) {
                 System.out.print("Por favor, ingrese un número válido: ");
